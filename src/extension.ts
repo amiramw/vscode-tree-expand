@@ -2,23 +2,18 @@
 // Import the module and reference it with the alias vscode in your code below
 import {
     commands,
-    Disposable,
-    Event,
-    EventEmitter,
-    FileType,
-    Uri,
     TreeDataProvider,
     TreeItem,
     TreeItemCollapsibleState,
     window,
-    workspace,
     ExtensionContext
 } from 'vscode';
 
 interface Entry { 
 	key: string;
  }
- 
+const c = {key: "c"};
+
 class TestTreeDataProvider implements TreeDataProvider<{ key: string }> {
 
     async getChildren(element?: Entry): Promise<{ key: string }[]> {
@@ -27,6 +22,9 @@ class TestTreeDataProvider implements TreeDataProvider<{ key: string }> {
 		}
 		if (element.key === "a") {
 			return [{key: "b"}];
+		}
+		if (element.key === "b") {
+			return [{key: "c"}];
 		}
 		return [];
     }
@@ -39,7 +37,7 @@ class TestTreeDataProvider implements TreeDataProvider<{ key: string }> {
     }
 
     async getParent(element: Entry): Promise<Entry | undefined> {
-        return element.key === "b" ? {key: "a"} : undefined;
+        return element.key === "b" ? {key: "a"} :  element.key === "c" ? {key: "b"} : undefined;
     }
 
     
@@ -56,12 +54,21 @@ export function activate(context: ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = commands.registerCommand('vscode-tree-expand.revealb', () => {
+	let disposable = commands.registerCommand('vscode-tree-expand.revealcnew', () => {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
-		window.showInformationMessage('Revealing b!');
-		testExplorerTreeView.reveal({key: "b"});
+		window.showInformationMessage('Revealing c!');
+		testExplorerTreeView.reveal({key: "c"});
+	});
+	context.subscriptions.push(disposable);
+
+	disposable = commands.registerCommand('vscode-tree-expand.revealcsame', () => {
+		// The code you place here will be executed every time your command is executed
+
+		// Display a message box to the user
+		window.showInformationMessage('Revealing c!');
+		testExplorerTreeView.reveal(c);
 	});
 
 	const treeDataProvider = new TestTreeDataProvider();

@@ -26,8 +26,12 @@
 		},
 		"commands": [
 			{
-				"command": "vscode-tree-expand.revealb",
-				"title": "Reveal b"
+				"command": "vscode-tree-expand.revealcsame",
+				"title": "Reveal c Same Object"
+			},
+			{
+				"command": "vscode-tree-expand.revealcnew",
+				"title": "Reveal c New Object"
 			}
 		]
 	},
